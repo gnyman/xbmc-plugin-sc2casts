@@ -1,2 +1,7 @@
-v0.1 
+v0.2.0
+- New version of the SC2Casts plugin with these features:
+	- Latest casts
+	- Top casts in: all time/month/week/24h
+		
+v0.1.0
 - Test version to make sure everything is working
