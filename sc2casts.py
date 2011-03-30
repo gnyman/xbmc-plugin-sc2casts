@@ -11,21 +11,26 @@ class SC2Casts:
 	
 	# ------------------------------------- Main functions ------------------------------------- #
 	
+	# display the root menu
 	def root(self):
-		self.addCategory('recent casts', 'http://www.sc2casts.com', 'rootRecent')
-		self.addCategory('top casts', 'http://www.sc2casts.com/top', 'rootTop')
-		#self.addCategory('browse casts', 'http://www.sc2casts.com/browse', 'rootBrowse')
-		
+		self.addCategory('recent casts', 'http://www.sc2casts.com', 'showTitles')
+		self.addCategory('top casts', '', 'rootTop')
+		self.addCategory('browse casts', '', 'rootBrowse')
+	
+	# display the top casts menu
 	def rootTop(self):
-		self.addCategory('top all time', 'http://www.sc2casts.com/top?all', 'topAll')
-		self.addCategory('top month', 'http://www.sc2casts.com/top?month', 'topMonth')
-		self.addCategory('top week', 'http://sc2casts.com/top?week', 'topWeek')
-		self.addCategory('top 24 hours', 'http://sc2casts.com/top', 'top24h')
-		
-	"""def rootBrowse(self):
-		self.addCategory('browse matchups', 'http://www.sc2casts.com', 'browseMatchups')
-		self.addCategory('browse players', 'http://www.sc2casts.com/top', 'browsePlayers')
-		self.addCategory('browse casters', 'http://www.sc2casts.com/browse', 'browseCasters')"""
+		self.addCategory('top all time', 'http://www.sc2casts.com/top?all', 'showTitlesTop')
+		self.addCategory('top month', 'http://www.sc2casts.com/top?month', 'showTitlesTop')
+		self.addCategory('top week', 'http://sc2casts.com/top?week', 'showTitlesTop')
+		self.addCategory('top 24 hours', 'http://sc2casts.com/top', 'showTitlesTop')
+	
+	# display the browse casts menu
+	def rootBrowse(self):
+		self.addCategory('browse events', '', 'browseEvents')
+	
+	# display the browse events menu
+	def browseEvents(self):
+		self.addCategory('TSL 3', 'http://sc2casts.com/event227-TSL-3', 'showTitles')
 
 	def addCategory(self,title,url,action):
 		url=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&title="+urllib.quote_plus(title)+"&action="+urllib.quote_plus(action)
@@ -42,7 +47,7 @@ class SC2Casts:
 	def addVideo(self,title,url):
 		# Check if URL is a 'fillUp' URL
 		if url != 'fillUp':
-			url = self.getVideoUrl(url)		
+			url = self.getVideoUrl(url)
 		liz=xbmcgui.ListItem(title, iconImage="DefaultVideo.png", thumbnailImage="DefaultVideo.png")
 		liz.setInfo( type="Video", infoLabels={ "Title": title } )
 		xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
@@ -53,15 +58,9 @@ class SC2Casts:
 			self.rootTop()
 		if (get("action") == "rootBrowse"):
 			self.rootBrowse()
-		if (get("action") == "rootRecent"):
-			self.showTitles(params)
-		if (get("action") == "topAll"):
-			self.showTitles(params)
-		if (get("action") == "topMonth"):
-			self.showTitles(params)
-		if (get("action") == "topWeek"):
-			self.showTitles(params)
-		if (get("action") == "top24h"):
+		if (get("action") == "browseEvents"):
+			self.browseEvents()
+		if (get("action") == "showTitles" or get("action") == "showTitlesTop"):
 			self.showTitles(params)
 		if (get("action") == "showGames"):
 			self.showGames(params)
@@ -88,11 +87,10 @@ class SC2Casts:
 		response = urllib2.urlopen(req)
 		link=response.read()
 		response.close()
-		
-		if get("action") == 'topAll' or get("action") == 'topMonth' or get("action") == 'topWeek' or get("action") == 'top24h':
-			info=re.compile('<h3><a href="(.+?)"><b >(.+?)</b> vs <b >(.+?)</b>&nbsp;(.*?)</a>').findall(link)
+		if get("action") == 'showTitlesTop':
+			info=re.compile('<a href="(.+?)"><b >(.+?)</b> vs <b >(.+?)</b>&nbsp;(.*?)</a>').findall(link)
 		else:
-			info=re.compile('<h2><a href="(.+?)"><b >(.+?)</b> vs <b >(.+?)</b>(.*?)</a>').findall(link)
+			info=re.compile('<a href="(.+?)"><b >(.+?)</b> vs <b >(.+?)</b>(.*?)</a>').findall(link)
 		caster=re.compile('<a href="/.+?"><span class="caster_name">(.+?)</span></a>').findall(link)
 		matchup=re.compile('<span style="color:#cccccc">(.*?)</span>').findall(link)
 		for i in range(len(info)):
@@ -110,20 +108,21 @@ class SC2Casts:
 		
 		if len(matchCount) > 0:
 			for i in range(len(matchCount)):
-				videoContent=re.compile('<param name="movie" value="http://www.youtube.com/v/(.+?)\?.+?"></param>').findall(link)
+				videoContent=re.compile('<param name="movie" value="http://www.youtube.com/v/(.+?)\?.+?"></param>').findall(matchCount[i][1])
 				if len(videoContent) == 0:
-					break
-				else:
-					for n in range(len(videoContent)):
-						self.addVideo('Game '+ str(n+1), videoContent[n])						
-					fillUp = len(matchCount)-n
-					if fillUp > 1:
-						for k in range(fillUp-1):
-							self.addVideo('Game '+ str(n+k+2), 'fillUp')
-					break
+					self.addVideo('Game '+ str(i+1), 'fillUp')
+				if len(videoContent) == 1:
+					self.addVideo('Game '+ str(i+1), videoContent[0])
+				if len(videoContent) > 1:
+					for k in range(len(videoContent)):
+						self.addVideo('Game '+ str(i+1)+', part '+ str(k+1), videoContent[k])
 		else:
 			videoContent=re.compile('<param name="movie" value="http://www.youtube.com/v/(.+?)\?.+?"></param>').findall(link)
-			self.addVideo('Game 1', videoContent[0])
+			if len(videoContent) > 1:
+				for n in range(len(videoContent)):
+					self.addVideo('Game 1, part '+ str(n+1), videoContent[n])
+			else:
+				self.addVideo('Game 1', videoContent[0])
 			
 			
 	# ------------------------------------- Data functions ------------------------------------- #

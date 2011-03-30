@@ -1,3 +1,8 @@
+v0.2.2
+----------------------
+- Fixed so that all videos now shows even if they are divaded in 2 or more parts.
+- Added "browse casts" in the root menu
+
 v0.2.1
 ----------------------
 - Added an icon + fanart
