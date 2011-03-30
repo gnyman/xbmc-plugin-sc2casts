@@ -1,3 +1,8 @@
+v0.2.1
+----------------------
+- Added an icon + fanart
+- the titles now shows ex. "(Best of 5) - [ZvP]....."
+
 v0.2.0
 ----------------------
 - New version of the SC2Casts plugin with these features:		

@@ -14,7 +14,7 @@ class SC2Casts:
 	def root(self):
 		self.addCategory('recent casts', 'http://www.sc2casts.com', 'rootRecent')
 		self.addCategory('top casts', 'http://www.sc2casts.com/top', 'rootTop')
-		self.addCategory('browse casts', 'http://www.sc2casts.com/browse', 'rootBrowse')
+		#self.addCategory('browse casts', 'http://www.sc2casts.com/browse', 'rootBrowse')
 		
 	def rootTop(self):
 		self.addCategory('top all time', 'http://www.sc2casts.com/top?all', 'topAll')
@@ -22,10 +22,10 @@ class SC2Casts:
 		self.addCategory('top week', 'http://sc2casts.com/top?week', 'topWeek')
 		self.addCategory('top 24 hours', 'http://sc2casts.com/top', 'top24h')
 		
-	def rootBrowse(self):
+	"""def rootBrowse(self):
 		self.addCategory('browse matchups', 'http://www.sc2casts.com', 'browseMatchups')
 		self.addCategory('browse players', 'http://www.sc2casts.com/top', 'browsePlayers')
-		self.addCategory('browse casters', 'http://www.sc2casts.com/browse', 'browseCasters')
+		self.addCategory('browse casters', 'http://www.sc2casts.com/browse', 'browseCasters')"""
 
 	def addCategory(self,title,url,action):
 		url=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&title="+urllib.quote_plus(title)+"&action="+urllib.quote_plus(action)
@@ -90,13 +90,13 @@ class SC2Casts:
 		response.close()
 		
 		if get("action") == 'topAll' or get("action") == 'topMonth' or get("action") == 'topWeek' or get("action") == 'top24h':
-			info=re.compile('<h3><a href="(.+?)"><b >(.+?)</b> vs <b >(.+?)</b>').findall(link)
+			info=re.compile('<h3><a href="(.+?)"><b >(.+?)</b> vs <b >(.+?)</b>&nbsp;(.*?)</a>').findall(link)
 		else:
-			info=re.compile('<h2><a href="(.+?)"><b >(.+?)</b> vs <b >(.+?)</b>').findall(link)
+			info=re.compile('<h2><a href="(.+?)"><b >(.+?)</b> vs <b >(.+?)</b>(.*?)</a>').findall(link)
 		caster=re.compile('<a href="/.+?"><span class="caster_name">(.+?)</span></a>').findall(link)
 		matchup=re.compile('<span style="color:#cccccc">(.*?)</span>').findall(link)
 		for i in range(len(info)):
-			self.addDirectory(matchup[i] +' ' + info[i][1] + " vs " + info[i][2] + " casted by " + caster[i],info[i][0],'showGames')
+			self.addDirectory(info[i][3] + ' - ' + matchup[i] +' ' + info[i][1] + " vs " + info[i][2] + " casted by " + caster[i],info[i][0],'showGames')
 			
 	def showGames(self, params = {}):
 		get = params.get
