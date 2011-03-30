@@ -88,9 +88,9 @@ class SC2Casts:
 		link=response.read()
 		response.close()
 		if get("action") == 'showTitlesTop':
-			info=re.compile('<a href="(.+?)"><b >(.+?)</b> vs <b >(.+?)</b>&nbsp;(.*?)</a>').findall(link)
+			info=re.compile('<h3><a href="(.+?)"><b >(.+?)</b> vs <b >(.+?)</b>&nbsp;(.*?)</a></h3>').findall(link)
 		else:
-			info=re.compile('<a href="(.+?)"><b >(.+?)</b> vs <b >(.+?)</b>(.*?)</a>').findall(link)
+			info=re.compile('<h2><a href="(.+?)"><b >(.+?)</b> vs <b >(.+?)</b>(.*?)</a></h2>').findall(link)
 		caster=re.compile('<a href="/.+?"><span class="caster_name">(.+?)</span></a>').findall(link)
 		matchup=re.compile('<span style="color:#cccccc">(.*?)</span>').findall(link)
 		for i in range(len(info)):
