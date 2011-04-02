@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <strings>
-    <!-- Category strings -->
+    <!-- Category / General strings -->
     <string id="30001">General</string>	
 	<string id="30100">Max video quality</string>
 	<string id="30110">SD</string>
 	<string id="30120">HD 720p</string>
 	<string id="30130">HD 1080p</string>
+	
+    <!-- Category / Title Options strings -->
+    <string id="30002">Title Options</string>	
+	<string id="30200">Show matchup</string>
+	<string id="30210">Show event</string>
+	<string id="30240">Show round</string>
+	<string id="30220">Show games</string>
+	<string id="30230">Show caster(s)</string>
 </strings>
