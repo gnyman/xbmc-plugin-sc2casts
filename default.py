@@ -1,6 +1,6 @@
 import sys, xbmc, xbmcplugin, xbmcaddon, sc2casts
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 __plugin__ = "SC2Casts-" + __version__
 __author__ = "Kristoffer Petersson"
 __settings__ = xbmcaddon.Addon(id='plugin.video.sc2casts')

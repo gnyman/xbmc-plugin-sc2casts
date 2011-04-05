@@ -1,3 +1,9 @@
+v0.4.0
+----------------------
+- Version 0.4.0 is now uploaded.
+- Submitted to the official repo
+- Updated the "browse" menu and added a "search" function
+
 v0.3.0
 ----------------------
 - Version 0.3.0 is now uploaded and ready for testing.

@@ -1,4 +1,5 @@
-import urllib,urllib2,re,sys,os,string,xbmcaddon,xbmcgui,xbmcplugin
+import urllib, urllib2, re, sys, os
+import xbmc, xbmcaddon, xbmcgui, xbmcplugin
 		
 ###################################
 ########  Class SC2Casts  #########
@@ -16,10 +17,12 @@ class SC2Casts:
 		if (get("action") == "rootBrowse"):
 			self.rootBrowse()
 		if (get("action") == "browseEvents"):
-			self.browseEvents()
+			self.browseEvents(params)
+		if (get("action") == "browseMatchups"):
+			self.browseMatchups()
 		if (get("action") == "browseCasters"):
-			self.browseCasters()
-		if (get("action") == "showTitles" or get("action") == "showTitlesTop"):
+			self.browseCasters(params)
+		if (get("action") == "showTitles" or get("action") == "showTitlesTop" or get("action") == "showTitlesSearch"):
 			self.showTitles(params)
 		if (get("action") == "showGames"):
 			self.showGames(params)
@@ -31,6 +34,7 @@ class SC2Casts:
 		self.addCategory('recent casts', 'http://www.sc2casts.com', 'showTitles')
 		self.addCategory('top casts', '', 'rootTop')
 		self.addCategory('browse casts', '', 'rootBrowse')
+		self.addCategory('search casts', '', 'showTitlesSearch')
 	
 	# display the top casts menu
 	def rootTop(self):
@@ -41,34 +45,46 @@ class SC2Casts:
 	
 	# display the browse casts menu
 	def rootBrowse(self):
-		self.addCategory('browse events', '', 'browseEvents')
-		self.addCategory('browse casters', '', 'browseCasters')
+		self.addCategory('browse events', 'http://www.sc2casts.com/browse', 'browseEvents')
+		self.addCategory('browse mathups', '', 'browseMatchups')
+		self.addCategory('browse casters', 'http://www.sc2casts.com/browse', 'browseCasters')
 	
 	# display the browse events menu
-	def browseEvents(self):
-		self.addCategory('TSL 3', 'http://sc2casts.com/event227-TSL-3', 'showTitles')
-		self.addCategory('Dreamhack', 'http://sc2casts.com/event144-DreamHack', 'showTitles')
-		self.addCategory('SC2Casts.com Invitational', 'http://sc2casts.com/event65-SC2Casts.com-Invitational', 'showTitles')
+	def browseEvents(self, params = {}):
+		get = params.get
+		link = self.getRequest(get("url"))
+		event = re.compile('<a href="/event(.*?)">(.*?)</a>').findall(link)
+
+		for i in range(len(event)):
+			self.addCategory(event[i][1], 'http://sc2casts.com/event'+event[i][0], 'showTitles')
+
+	# display the browse casters menu
+	def browseMatchups(self):
+		self.addCategory('PvZ', 'http://sc2casts.com/matchups-PvZ', 'showTitles')
+		self.addCategory('PvT', 'http://sc2casts.com/matchups-PvT', 'showTitles')
+		self.addCategory('TvZ', 'http://sc2casts.com/matchups-TvZ', 'showTitles')
+		self.addCategory('PvP', 'http://sc2casts.com/matchups-PvP', 'showTitles')
+		self.addCategory('TvT', 'http://sc2casts.com/matchups-TvT', 'showTitles')
+		self.addCategory('ZvZ', 'http://sc2casts.com/matchups-ZvZ', 'showTitles')
 		
 	# display the browse casters menu
-	def browseCasters(self):
-		self.addCategory('Day[9] & djWHEAT', 'http://sc2casts.com/caster97-Day9-&-djWHEAT', 'showTitles')
+	def browseCasters(self, params = {}):
+		get = params.get
+		link = self.getRequest(get("url"))
+		caster = re.compile('<a href="/caster(.*?)">(.*?)</a>').findall(link)
+
+		for i in range(len(caster)):
+			self.addCategory(caster[i][1], 'http://sc2casts.com/caster'+caster[i][0], 'showTitles', len(caster))
 
 		
 	# ------------------------------------- Add functions ------------------------------------- #
 
 	
-	def addCategory(self,title,url,action):
+	def addCategory(self,title,url,action, count = 0):
 		url=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&title="+urllib.quote_plus(title)+"&action="+urllib.quote_plus(action)
 		listitem=xbmcgui.ListItem(title, iconImage="DefaultFolder.png", thumbnailImage="DefaultFolder.png")
 		listitem.setInfo( type="Video", infoLabels={ "Title": title } )
-		xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=url, listitem=listitem, isFolder=True)
-		
-	def addDirectory(self,title,url,action):
-		url=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&title="+urllib.quote_plus(title)+"&action="+urllib.quote_plus(action)
-		liz=xbmcgui.ListItem(title, iconImage="DefaultFolder.png", thumbnailImage="DefaultFolder.png")
-		liz.setInfo( type="Video", infoLabels={ "Title": title } )
-		xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz,isFolder=True)
+		xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=url, listitem=listitem, isFolder=True, totalItems=count)
 		
 	def addVideo(self,title,url):
 		# Check if URL is a 'fillUp' URL
@@ -80,11 +96,18 @@ class SC2Casts:
 
 
 	# ------------------------------------- Show functions ------------------------------------- #
-
+	
 	
 	def showTitles(self, params = {}):
 		get = params.get
-		link = self.getRequest(get("url"))
+		url = get("url")
+		
+		# Check if user want to search
+		if get("action") == 'showTitlesSearch':
+			keyboard = xbmc.Keyboard('')
+			keyboard.doModal()
+			url = 'http://sc2casts.com/?q='+keyboard.getText()
+		link = self.getRequest(url)
 		
 		# Get settings
 		boolMatchup = self.__settings__.getSetting( "matchup" )
@@ -125,7 +148,7 @@ class SC2Casts:
 				if boolCaster == 'true':
 					url += 'cast by: ' + caster[i]
 				
-				self.addDirectory(url,title[i][0],'showGames')
+				self.addCategory(url,title[i][0],'showGames')
 			
 	def showGames(self, params = {}):
 		get = params.get
