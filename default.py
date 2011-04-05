@@ -17,5 +17,5 @@ else:
 	get = params.get
 	if (get("action")):
 		SC2Casts.action(params)
- 
+	
 xbmcplugin.endOfDirectory(int(sys.argv[1]))

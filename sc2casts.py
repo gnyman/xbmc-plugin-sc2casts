@@ -9,6 +9,7 @@ class SC2Casts:
 
 	USERAGENT = "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-GB; rv:1.9.2.8) Gecko/20100722 Firefox/3.6.8"
 	__settings__ = xbmcaddon.Addon(id='plugin.video.sc2casts')
+	__language__ = __settings__.getLocalizedString
 	
 	def action(self, params):
 		get = params.get
@@ -31,23 +32,23 @@ class SC2Casts:
 	
 	# display the root menu
 	def root(self):
-		self.addCategory('recent casts', 'http://www.sc2casts.com', 'showTitles')
-		self.addCategory('top casts', '', 'rootTop')
-		self.addCategory('browse casts', '', 'rootBrowse')
-		self.addCategory('search casts', '', 'showTitlesSearch')
+		self.addCategory(self.__language__( 31000 ), 'http://www.sc2casts.com', 'showTitles')
+		self.addCategory(self.__language__( 31001 ), '', 'rootTop')
+		self.addCategory(self.__language__( 31002 ), '', 'rootBrowse')
+		self.addCategory(self.__language__( 31003 ), '', 'showTitlesSearch')
 	
 	# display the top casts menu
 	def rootTop(self):
-		self.addCategory('top all time', 'http://www.sc2casts.com/top?all', 'showTitlesTop')
-		self.addCategory('top month', 'http://www.sc2casts.com/top?month', 'showTitlesTop')
-		self.addCategory('top week', 'http://sc2casts.com/top?week', 'showTitlesTop')
-		self.addCategory('top 24 hours', 'http://sc2casts.com/top', 'showTitlesTop')
+		self.addCategory(self.__language__( 31004 ), 'http://www.sc2casts.com/top?all', 'showTitlesTop')
+		self.addCategory(self.__language__( 31005 ), 'http://www.sc2casts.com/top?month', 'showTitlesTop')
+		self.addCategory(self.__language__( 31006 ), 'http://sc2casts.com/top?week', 'showTitlesTop')
+		self.addCategory(self.__language__( 31007 ), 'http://sc2casts.com/top', 'showTitlesTop')
 	
 	# display the browse casts menu
 	def rootBrowse(self):
-		self.addCategory('browse events', 'http://www.sc2casts.com/browse', 'browseEvents')
-		self.addCategory('browse mathups', '', 'browseMatchups')
-		self.addCategory('browse casters', 'http://www.sc2casts.com/browse', 'browseCasters')
+		self.addCategory(self.__language__( 31008 ), 'http://www.sc2casts.com/browse', 'browseEvents')
+		self.addCategory(self.__language__( 31009 ), '', 'browseMatchups')
+		self.addCategory(self.__language__( 31010 ), 'http://www.sc2casts.com/browse', 'browseCasters')
 	
 	# display the browse events menu
 	def browseEvents(self, params = {}):

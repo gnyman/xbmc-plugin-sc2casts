@@ -1,5 +1,9 @@
 v0.4.0
 ----------------------
+- Added strings to strings.xml
+
+v0.4.0
+----------------------
 - Version 0.4.0 is now uploaded.
 - Submitted to the official repo
 - Updated the "browse" menu and added a "search" function
