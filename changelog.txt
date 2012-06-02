@@ -1,3 +1,7 @@
+v0.4.5
+----------------------
+- Fixed video path for some videos according to Phek's instructions http://forum.xbmc.org/showthread.php?tid=98094&page=3
+
 v0.4.4
 ----------------------
 - Updated some code due to changes on Youtube
