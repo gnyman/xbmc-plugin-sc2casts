@@ -91,6 +91,7 @@ class SC2Casts:
 		# Check if URL is a 'fillUp' URL
 		if url != 'fillUp':
 			url = self.getVideoUrl(url)
+            url = re.sub("^url=", "", url)
 		liz=xbmcgui.ListItem(title, iconImage="DefaultVideo.png", thumbnailImage="DefaultVideo.png")
 		liz.setInfo( type="Video", infoLabels={ "Title": title } )
 		xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
