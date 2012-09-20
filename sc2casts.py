@@ -96,7 +96,7 @@ class SC2Casts:
 		liz.setProperty("IsPlayable","true")
 		xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
 
- ------------------------------------- Show functions ------------------------------------- #
+	#------------------------------------- Show functions ------------------------------------- #
 	
 	
 	def showTitles(self, params = {}):
