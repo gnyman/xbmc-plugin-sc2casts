@@ -90,14 +90,13 @@ class SC2Casts:
 	def addVideo(self,title,url):
 		# Check if URL is a 'fillUp' URL
 		if url != 'fillUp':
-			url = self.getVideoUrl(url)
-			url = re.sub("^url=", "", url)
+			url = "plugin://plugin.video.youtube/?action=play_video&videoid=%s"%url
 		liz=xbmcgui.ListItem(title, iconImage="DefaultVideo.png", thumbnailImage="DefaultVideo.png")
 		liz.setInfo( type="Video", infoLabels={ "Title": title } )
+		liz.setProperty("IsPlayable","true")
 		xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
 
-
-	# ------------------------------------- Show functions ------------------------------------- #
+	#------------------------------------- Show functions ------------------------------------- #
 	
 	
 	def showTitles(self, params = {}):
@@ -199,38 +198,3 @@ class SC2Casts:
 		response.close()
 		return link
 	
-	def getVideoUrl(self, url):
-		print url
-		link = self.getRequest('http://www.youtube.com/watch?v='+url+'&safeSearch=none&hl=en_us')
-		fmtSource = re.findall('"url_encoded_fmt_stream_map": "([^"]+)"', link)
-		fmt_url_map = urllib.unquote_plus(fmtSource[0]).split(',url=')
-		links = {}
-			
-		for fmt_url in fmt_url_map:
-				url = fmt_url.replace('\u0026','&')
-				quality = url[url.rfind('&itag=')+6:]
-				if(url.find('&itag=')!=url.rfind('&itag=')):
-						url = url[:url.rfind('&itag=')]
-				if (url.rfind('; codecs')>0):
-						url = url[:url.rfind('; codecs')]
-				links[int(quality)] = url
-		
-		hd_quality = int(self.__settings__.getSetting( "hd_videos" ))
-		get = links.get
-		
-		# Select SD quality, standard
-		if (get(35)):
-			url = get(35)
-		elif (get(34)):
-			url = get(34)
-		
-		# Select HD quality if wanted
-		if (hd_quality > 0): # <-- 720p
-			if (get(22)):
-				url = get(22)
-		if (hd_quality > 1): # <-- 1080p
-			if (get(37)):
-				url = get(37)
-				
-		return url
-		
