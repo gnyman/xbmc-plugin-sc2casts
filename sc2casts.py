@@ -1,16 +1,16 @@
 import urllib, urllib2, re, sys, os
 import xbmc, xbmcaddon, xbmcgui, xbmcplugin
-        
+
 ###################################
 ########  Class SC2Casts  #########
 ###################################
-                
-class SC2Casts: 
+
+class SC2Casts:
 
     USERAGENT = "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-GB; rv:1.9.2.8) Gecko/20100722 Firefox/3.6.8"
     __settings__ = xbmcaddon.Addon(id='plugin.video.sc2casts')
     __language__ = __settings__.getLocalizedString
-    
+
     def action(self, params):
         get = params.get
         if (get("action") == "rootTop"):
@@ -27,29 +27,29 @@ class SC2Casts:
             self.showTitles(params)
         if (get("action") == "showGames"):
             self.showGames(params)
-    
+
     # ------------------------------------- Menu functions ------------------------------------- #
-    
+
     # display the root menu
     def root(self):
         self.addCategory(self.__language__( 31000 ), 'http://sc2casts.com/index.php', 'showTitles')
         self.addCategory(self.__language__( 31001 ), '', 'rootTop')
         self.addCategory(self.__language__( 31002 ), '', 'rootBrowse')
         self.addCategory(self.__language__( 31003 ), '', 'showTitlesSearch')
-    
+
     # display the top casts menu
     def rootTop(self):
         self.addCategory(self.__language__( 31004 ), 'http://sc2casts.com/top/index.php?all', 'showTitlesTop')
         self.addCategory(self.__language__( 31005 ), 'http://sc2casts.com/top/index.php?month', 'showTitlesTop')
         self.addCategory(self.__language__( 31006 ), 'http://sc2casts.com/top/index.php?week', 'showTitlesTop')
         self.addCategory(self.__language__( 31007 ), 'http://sc2casts.com/top/index.php', 'showTitlesTop')
-    
+
     # display the browse casts menu
     def rootBrowse(self):
         self.addCategory(self.__language__( 31008 ), 'http://sc2casts.com/browse/index.php', 'browseEvents')
         self.addCategory(self.__language__( 31009 ), '', 'browseMatchups')
         self.addCategory(self.__language__( 31010 ), 'http://sc2casts.com/browse/index.php', 'browseCasters')
-    
+
     # display the browse events menu
     def browseEvents(self, params = {}):
         get = params.get
@@ -67,7 +67,7 @@ class SC2Casts:
         self.addCategory('PvP', 'http://sc2casts.com/matchups-PvP', 'showTitles')
         self.addCategory('TvT', 'http://sc2casts.com/matchups-TvT', 'showTitles')
         self.addCategory('ZvZ', 'http://sc2casts.com/matchups-ZvZ', 'showTitles')
-        
+
     # display the browse casters menu
     def browseCasters(self, params = {}):
         get = params.get
@@ -77,16 +77,16 @@ class SC2Casts:
         for i in range(len(caster)):
             self.addCategory(caster[i][1], 'http://sc2casts.com/caster'+caster[i][0], 'showTitles', len(caster))
 
-        
+
     # ------------------------------------- Add functions ------------------------------------- #
 
-    
+
     def addCategory(self,title,url,action, count = 0):
         url=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&title="+urllib.quote_plus(title)+"&action="+urllib.quote_plus(action)
         listitem=xbmcgui.ListItem(title, iconImage="DefaultFolder.png", thumbnailImage="DefaultFolder.png")
         listitem.setInfo( type="Video", infoLabels={ "Title": title } )
         xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=url, listitem=listitem, isFolder=True, totalItems=count)
-        
+
     def addVideo(self,title,url):
         # Check if URL is a 'fillUp' URL
         if url != 'fillUp':
@@ -97,33 +97,33 @@ class SC2Casts:
         xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
 
     #------------------------------------- Show functions ------------------------------------- #
-    
-    
+
+
     def showTitles(self, params = {}):
         get = params.get
         url = get("url")
-        
+
         # Check if user want to search
         if get("action") == 'showTitlesSearch':
             keyboard = xbmc.Keyboard('')
             keyboard.doModal()
             url = 'http://sc2casts.com/?q='+keyboard.getText()
         link = self.getRequest(url)
-        
+
         # Get settings
         boolMatchup = self.__settings__.getSetting( "matchup" )
         boolNr_games = self.__settings__.getSetting( "nr_games" )
         boolEvent = self.__settings__.getSetting( "event" )
         boolRound = self.__settings__.getSetting( "round" )
         boolCaster = self.__settings__.getSetting( "caster" )
-        
+
         # Get info to show
         caster = re.compile('<a href="/.+?"><span class="caster_name">(.*?)</span></a>').findall(link)
         matchup = re.compile('<span style="color:#cccccc">(.*?)</span>').findall(link)
         roundname = re.compile('<span class="round_name">(.*?)</span>').findall(link)
         checkSource = re.compile('<span class="source_name">(.*?)</span>').findall(link)
         event = re.compile('<span class="event_name".*?>(.*?)</span>').findall(link)
-        
+
         #Different source if URL is .../top
         if get("action") == 'showTitlesTop':
             title = re.compile('<h3><a href="(.+?)"><b >(.+?)</b> vs <b >(.+?)</b>&nbsp;\((.*?)\)</a></h3>').findall(link)
@@ -139,7 +139,7 @@ class SC2Casts:
                     url += matchup[i] + ' | '
 
                 url += title[i][1] + ' vs ' + title[i][2] + ' | '
-                    
+
                 if boolNr_games == 'true':
                     url += title[i][3] + ' | '
                 if boolEvent == 'true':
@@ -148,14 +148,14 @@ class SC2Casts:
                     url += roundname[i] + ' | '
                 if boolCaster == 'true':
                     url += 'cast by: ' + caster[i]
-                
+
                 self.addCategory(url,title[i][0],'showGames')
-            
+
     def showGames(self, params = {}):
         get = params.get
         link = self.getRequest('http://sc2casts.com'+get("url"))
         matchCount = re.compile('<div id="g(.+?)"(.+?)</div></div>').findall(link)
-        
+
         if len(matchCount) > 0:
             for i in range(len(matchCount)):
                 videoContent=re.compile('<param name="movie" value="http://www.youtube.com/v/(.+?)\?.+?"></param>').findall(matchCount[i][1])
@@ -173,12 +173,12 @@ class SC2Casts:
                     self.addVideo('Game 1, part '+ str(n+1), videoContent[n])
             else:
                 self.addVideo('Game 1', videoContent[0])
-            
-            
+
+
     # ------------------------------------- Data functions ------------------------------------- #
 
-    
-    def getParams(self, paramList): 
+
+    def getParams(self, paramList):
         splitParams = paramList[paramList.find('?')+1:].split('&')
         paramsFinal = {}
         for value in splitParams:
@@ -189,7 +189,7 @@ class SC2Casts:
                 content = urllib.unquote_plus(content)
             paramsFinal[type] = content
         return paramsFinal
-        
+
     def getRequest(self, url):
         req = urllib2.Request(url)
         req.add_header('User-Agent', self.USERAGENT)
@@ -197,4 +197,4 @@ class SC2Casts:
         link=response.read()
         response.close()
         return link
-    
+

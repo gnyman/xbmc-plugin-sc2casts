@@ -11,11 +11,11 @@ SC2Casts = sc2casts.SC2Casts()
 if (not sys.argv[2]):
     SC2Casts.root()
 else:
-	print __plugin__
+    print __plugin__
 
-	params = SC2Casts.getParams(sys.argv[2])
-	get = params.get
-	if (get("action")):
-		SC2Casts.action(params)
-	
+    params = SC2Casts.getParams(sys.argv[2])
+    get = params.get
+    if (get("action")):
+        SC2Casts.action(params)
+
 xbmcplugin.endOfDirectory(int(sys.argv[1]))
