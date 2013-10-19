@@ -8,9 +8,6 @@ import xbmcaddon
 import xbmcgui
 import xbmcplugin
 
-###################################
-########  Class SC2Casts  #########
-###################################
 
 class SC2Casts:
 
