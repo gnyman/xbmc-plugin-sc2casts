@@ -39,23 +39,23 @@ class SC2Casts:
 
     # display the root menu
     def root(self):
-        self.addCategory(self.__language__( 31000 ), 'http://sc2casts.com/index.php', 'showTitles')
-        self.addCategory(self.__language__( 31001 ), '', 'rootTop')
-        self.addCategory(self.__language__( 31002 ), '', 'rootBrowse')
-        self.addCategory(self.__language__( 31003 ), '', 'showTitlesSearch')
+        self.addCategory(self.__language__(31000), 'http://sc2casts.com/index.php', 'showTitles')
+        self.addCategory(self.__language__(31001), '', 'rootTop')
+        self.addCategory(self.__language__(31002), '', 'rootBrowse')
+        self.addCategory(self.__language__(31003), '', 'showTitlesSearch')
 
     # display the top casts menu
     def rootTop(self):
-        self.addCategory(self.__language__( 31004 ), 'http://sc2casts.com/top/index.php?all', 'showTitlesTop')
-        self.addCategory(self.__language__( 31005 ), 'http://sc2casts.com/top/index.php?month', 'showTitlesTop')
-        self.addCategory(self.__language__( 31006 ), 'http://sc2casts.com/top/index.php?week', 'showTitlesTop')
-        self.addCategory(self.__language__( 31007 ), 'http://sc2casts.com/top/index.php', 'showTitlesTop')
+        self.addCategory(self.__language__(31004), 'http://sc2casts.com/top/index.php?all', 'showTitlesTop')
+        self.addCategory(self.__language__(31005), 'http://sc2casts.com/top/index.php?month', 'showTitlesTop')
+        self.addCategory(self.__language__(31006), 'http://sc2casts.com/top/index.php?week', 'showTitlesTop')
+        self.addCategory(self.__language__(31007), 'http://sc2casts.com/top/index.php', 'showTitlesTop')
 
     # display the browse casts menu
     def rootBrowse(self):
-        self.addCategory(self.__language__( 31008 ), 'http://sc2casts.com/browse/index.php', 'browseEvents')
-        self.addCategory(self.__language__( 31009 ), '', 'browseMatchups')
-        self.addCategory(self.__language__( 31010 ), 'http://sc2casts.com/browse/index.php', 'browseCasters')
+        self.addCategory(self.__language__(31008), 'http://sc2casts.com/browse/index.php', 'browseEvents')
+        self.addCategory(self.__language__(31009), '', 'browseMatchups')
+        self.addCategory(self.__language__(31010), 'http://sc2casts.com/browse/index.php', 'browseCasters')
 
     # display the browse events menu
     def browseEvents(self, params = {}):
@@ -91,7 +91,7 @@ class SC2Casts:
     def addCategory(self,title,url,action, count = 0):
         url=sys.argv[0]+'?url='+urllib.quote_plus(url)+'&title='+urllib.quote_plus(title)+'&action='+urllib.quote_plus(action)
         listitem=xbmcgui.ListItem(title, iconImage='DefaultFolder.png', thumbnailImage='DefaultFolder.png')
-        listitem.setInfo( type='Video', infoLabels={ 'Title': title } )
+        listitem.setInfo(type='Video', infoLabels={ 'Title': title })
         xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=url, listitem=listitem, isFolder=True, totalItems=count)
 
     def addVideo(self,title,url):
@@ -99,7 +99,7 @@ class SC2Casts:
         if url != 'fillUp':
             url = 'plugin://plugin.video.youtube/?action=play_video&videoid=%s'%url
         liz=xbmcgui.ListItem(title, iconImage='DefaultVideo.png', thumbnailImage='DefaultVideo.png')
-        liz.setInfo( type='Video', infoLabels={ 'Title': title } )
+        liz.setInfo(type='Video', infoLabels={ 'Title': title })
         liz.setProperty('IsPlayable','true')
         xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
 
@@ -118,11 +118,11 @@ class SC2Casts:
         link = self.getRequest(url)
 
         # Get settings
-        boolMatchup = self.__settings__.getSetting( 'matchup' )
-        boolNr_games = self.__settings__.getSetting( 'nr_games' )
-        boolEvent = self.__settings__.getSetting( 'event' )
-        boolRound = self.__settings__.getSetting( 'round' )
-        boolCaster = self.__settings__.getSetting( 'caster' )
+        boolMatchup = self.__settings__.getSetting('matchup')
+        boolNr_games = self.__settings__.getSetting('nr_games')
+        boolEvent = self.__settings__.getSetting('event')
+        boolRound = self.__settings__.getSetting('round')
+        boolCaster = self.__settings__.getSetting('caster')
 
         # Get info to show
         caster = re.compile('<a href="/.+?"><span class="caster_name">(.*?)</span></a>').findall(link)
