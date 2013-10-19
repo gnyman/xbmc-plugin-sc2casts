@@ -11,6 +11,7 @@ import xbmcplugin
 
 class SC2Casts:
     SC2CASTS_URL = 'http://sc2casts.com'
+    VIDEO_URL = 'http://www.youtube.com'
     USERAGENT = ('Mozilla/5.0 (Windows; U; Windows NT 6.1; en-GB; rv:1.9.2.8) '
                  'Gecko/20100722 Firefox/3.6.8')
     __settings__ = xbmcaddon.Addon(id='plugin.video.sc2casts')
@@ -209,8 +210,8 @@ class SC2Casts:
         if len(matchCount) > 0:
             for i in range(len(matchCount)):
                 videoContent=(re.compile('<param name="movie" '
-                                         'value="http://www.youtube.com/v/(.+?)'
-                                         '\?.+?"></param>')
+                                         'value="%s/v/(.+?)'
+                                         '\?.+?"></param>' % self.VIDEO_URL)
                               .findall(matchCount[i][1]))
                 if len(videoContent) == 0:
                     self.addVideo('Game '+ str(i+1), 'fillUp')
@@ -221,9 +222,10 @@ class SC2Casts:
                         self.addVideo('Game '+ str(i+1)+', part '+ str(k+1),
                                       videoContent[k])
         else:
-            videoContent=re.compile('<param name="movie" '
-                                    'value="http://www.youtube.com/v/(.+?)'
-                                    '\?.+?"></param>').findall(link)
+            videoContent=(re.compile('<param name="movie" '
+                                     'value="%s/v/(.+?)'
+                                     '\?.+?"></param>' % self.VIDEO_URL)
+                          .findall(link))
             if len(videoContent) > 1:
                 for n in range(len(videoContent)):
                     self.addVideo('Game 1, part '+ str(n+1), videoContent[n])
