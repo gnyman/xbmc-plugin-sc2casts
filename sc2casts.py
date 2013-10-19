@@ -12,6 +12,7 @@ import xbmcplugin
 class SC2Casts:
     SC2CASTS_URL = 'http://sc2casts.com'
     VIDEO_URL = 'http://www.youtube.com'
+    VIDEO_PLUGIN_URL = 'plugin://plugin.video.youtube'
     USERAGENT = ('Mozilla/5.0 (Windows; U; Windows NT 6.1; en-GB; rv:1.9.2.8) '
                  'Gecko/20100722 Firefox/3.6.8')
     __settings__ = xbmcaddon.Addon(id='plugin.video.sc2casts')
@@ -129,8 +130,8 @@ class SC2Casts:
     def addVideo(self,title,url):
         # Check if URL is a 'fillUp' URL
         if url != 'fillUp':
-            url = ('plugin://plugin.video.youtube/?action=play_video&videoid=%s'
-                    %url)
+            url = ('%s/?action=play_video&videoid=%s'
+                    %(self.VIDEO_PLUGIN_URL, url))
         liz=xbmcgui.ListItem(title, iconImage='DefaultVideo.png',
                              thumbnailImage='DefaultVideo.png')
         liz.setInfo(type='Video', infoLabels={ 'Title': title })
