@@ -117,7 +117,7 @@ class SC2Casts:
     # Add functions #
 
 
-    def addCategory(self,title,url,action, count = 0):
+    def addCategory(self, title, url, action, count = 0):
         url=(sys.argv[0] + '?url=' + urllib.quote_plus(url) + '&title=' +
              urllib.quote_plus(title) + '&action=' + urllib.quote_plus(action))
         listitem=xbmcgui.ListItem(title, iconImage='DefaultFolder.png',
@@ -127,7 +127,7 @@ class SC2Casts:
                                     listitem=listitem, isFolder=True,
                                     totalItems=count)
 
-    def addVideo(self,title,url):
+    def addVideo(self, title, url):
         # Check if URL is a 'fillUp' URL
         if url != 'fillUp':
             url = ('%s/?action=play_video&videoid=%s'
