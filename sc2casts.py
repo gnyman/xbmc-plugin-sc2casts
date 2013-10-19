@@ -14,25 +14,25 @@ import xbmcplugin
 
 class SC2Casts:
 
-    USERAGENT = "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-GB; rv:1.9.2.8) Gecko/20100722 Firefox/3.6.8"
+    USERAGENT = 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-GB; rv:1.9.2.8) Gecko/20100722 Firefox/3.6.8'
     __settings__ = xbmcaddon.Addon(id='plugin.video.sc2casts')
     __language__ = __settings__.getLocalizedString
 
     def action(self, params):
         get = params.get
-        if (get("action") == "rootTop"):
+        if (get('action') == 'rootTop'):
             self.rootTop()
-        if (get("action") == "rootBrowse"):
+        if (get('action') == 'rootBrowse'):
             self.rootBrowse()
-        if (get("action") == "browseEvents"):
+        if (get('action') == 'browseEvents'):
             self.browseEvents(params)
-        if (get("action") == "browseMatchups"):
+        if (get('action') == 'browseMatchups'):
             self.browseMatchups()
-        if (get("action") == "browseCasters"):
+        if (get('action') == 'browseCasters'):
             self.browseCasters(params)
-        if (get("action") == "showTitles" or get("action") == "showTitlesTop" or get("action") == "showTitlesSearch"):
+        if (get('action') == 'showTitles' or get('action') == 'showTitlesTop' or get('action') == 'showTitlesSearch'):
             self.showTitles(params)
-        if (get("action") == "showGames"):
+        if (get('action') == 'showGames'):
             self.showGames(params)
 
     # ------------------------------------- Menu functions ------------------------------------- #
@@ -60,7 +60,7 @@ class SC2Casts:
     # display the browse events menu
     def browseEvents(self, params = {}):
         get = params.get
-        link = self.getRequest(get("url"))
+        link = self.getRequest(get('url'))
         event = re.compile('<a href="/event(.*?)">(.*?)</a>').findall(link)
 
         for i in range(len(event)):
@@ -78,7 +78,7 @@ class SC2Casts:
     # display the browse casters menu
     def browseCasters(self, params = {}):
         get = params.get
-        link = self.getRequest(get("url"))
+        link = self.getRequest(get('url'))
         caster = re.compile('<a href="/caster(.*?)">(.*?)</a>').findall(link)
 
         for i in range(len(caster)):
@@ -89,18 +89,18 @@ class SC2Casts:
 
 
     def addCategory(self,title,url,action, count = 0):
-        url=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&title="+urllib.quote_plus(title)+"&action="+urllib.quote_plus(action)
-        listitem=xbmcgui.ListItem(title, iconImage="DefaultFolder.png", thumbnailImage="DefaultFolder.png")
-        listitem.setInfo( type="Video", infoLabels={ "Title": title } )
+        url=sys.argv[0]+'?url='+urllib.quote_plus(url)+'&title='+urllib.quote_plus(title)+'&action='+urllib.quote_plus(action)
+        listitem=xbmcgui.ListItem(title, iconImage='DefaultFolder.png', thumbnailImage='DefaultFolder.png')
+        listitem.setInfo( type='Video', infoLabels={ 'Title': title } )
         xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=url, listitem=listitem, isFolder=True, totalItems=count)
 
     def addVideo(self,title,url):
         # Check if URL is a 'fillUp' URL
         if url != 'fillUp':
-            url = "plugin://plugin.video.youtube/?action=play_video&videoid=%s"%url
-        liz=xbmcgui.ListItem(title, iconImage="DefaultVideo.png", thumbnailImage="DefaultVideo.png")
-        liz.setInfo( type="Video", infoLabels={ "Title": title } )
-        liz.setProperty("IsPlayable","true")
+            url = 'plugin://plugin.video.youtube/?action=play_video&videoid=%s'%url
+        liz=xbmcgui.ListItem(title, iconImage='DefaultVideo.png', thumbnailImage='DefaultVideo.png')
+        liz.setInfo( type='Video', infoLabels={ 'Title': title } )
+        liz.setProperty('IsPlayable','true')
         xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
 
     #------------------------------------- Show functions ------------------------------------- #
@@ -108,21 +108,21 @@ class SC2Casts:
 
     def showTitles(self, params = {}):
         get = params.get
-        url = get("url")
+        url = get('url')
 
         # Check if user want to search
-        if get("action") == 'showTitlesSearch':
+        if get('action') == 'showTitlesSearch':
             keyboard = xbmc.Keyboard('')
             keyboard.doModal()
             url = 'http://sc2casts.com/?q='+keyboard.getText()
         link = self.getRequest(url)
 
         # Get settings
-        boolMatchup = self.__settings__.getSetting( "matchup" )
-        boolNr_games = self.__settings__.getSetting( "nr_games" )
-        boolEvent = self.__settings__.getSetting( "event" )
-        boolRound = self.__settings__.getSetting( "round" )
-        boolCaster = self.__settings__.getSetting( "caster" )
+        boolMatchup = self.__settings__.getSetting( 'matchup' )
+        boolNr_games = self.__settings__.getSetting( 'nr_games' )
+        boolEvent = self.__settings__.getSetting( 'event' )
+        boolRound = self.__settings__.getSetting( 'round' )
+        boolCaster = self.__settings__.getSetting( 'caster' )
 
         # Get info to show
         caster = re.compile('<a href="/.+?"><span class="caster_name">(.*?)</span></a>').findall(link)
@@ -132,7 +132,7 @@ class SC2Casts:
         event = re.compile('<span class="event_name".*?>(.*?)</span>').findall(link)
 
         #Different source if URL is .../top
-        if get("action") == 'showTitlesTop':
+        if get('action') == 'showTitlesTop':
             title = re.compile('<h3><a href="(.+?)"><b >(.+?)</b> vs <b >(.+?)</b>&nbsp;\((.*?)\)</a></h3>').findall(link)
         else:
             title = re.compile('<h2><a href="(.+?)"><b >(.+?)</b> vs <b >(.+?)</b> \((.*?)\)</a>').findall(link)
@@ -160,7 +160,7 @@ class SC2Casts:
 
     def showGames(self, params = {}):
         get = params.get
-        link = self.getRequest('http://sc2casts.com'+get("url"))
+        link = self.getRequest('http://sc2casts.com'+get('url'))
         matchCount = re.compile('<div id="g(.+?)"(.+?)</div></div>').findall(link)
 
         if len(matchCount) > 0:
