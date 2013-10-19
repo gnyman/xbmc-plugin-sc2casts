@@ -118,8 +118,8 @@ class SC2Casts:
 
 
     def addCategory(self,title,url,action, count = 0):
-        url=(sys.argv[0]+'?url='+urllib.quote_plus(url)+'&title='+
-             urllib.quote_plus(title)+'&action='+urllib.quote_plus(action))
+        url=(sys.argv[0] + '?url=' + urllib.quote_plus(url) + '&title=' +
+             urllib.quote_plus(title) + '&action=' + urllib.quote_plus(action))
         listitem=xbmcgui.ListItem(title, iconImage='DefaultFolder.png',
                                   thumbnailImage='DefaultFolder.png')
         listitem.setInfo(type='Video', infoLabels={ 'Title': title })
@@ -150,7 +150,7 @@ class SC2Casts:
         if get('action') == 'showTitlesSearch':
             keyboard = xbmc.Keyboard('')
             keyboard.doModal()
-            url = self.getCastsURL('/?q='+keyboard.getText())
+            url = self.getCastsURL('/?q=' + keyboard.getText())
         link = self.getRequest(url)
 
         # Get settings
@@ -215,12 +215,13 @@ class SC2Casts:
                                          '\?.+?"></param>' % self.VIDEO_URL)
                               .findall(matchCount[i][1]))
                 if len(videoContent) == 0:
-                    self.addVideo('Game '+ str(i+1), 'fillUp')
+                    self.addVideo('Game ' + str(i + 1), 'fillUp')
                 if len(videoContent) == 1:
-                    self.addVideo('Game '+ str(i+1), videoContent[0])
+                    self.addVideo('Game ' + str(i + 1), videoContent[0])
                 if len(videoContent) > 1:
                     for k in range(len(videoContent)):
-                        self.addVideo('Game '+ str(i+1)+', part '+ str(k+1),
+                        self.addVideo('Game ' + str(i + 1) + ', part ' +
+                                      str(k + 1),
                                       videoContent[k])
         else:
             videoContent=(re.compile('<param name="movie" '
@@ -238,7 +239,7 @@ class SC2Casts:
 
 
     def getParams(self, paramList):
-        splitParams = paramList[paramList.find('?')+1:].split('&')
+        splitParams = paramList[paramList.find('?') + 1:].split('&')
         paramsFinal = {}
         for value in splitParams:
             splitParams = value.split('=')
