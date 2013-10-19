@@ -10,11 +10,14 @@ import xbmcplugin
 
 
 class SC2Casts:
-
+    SC2CASTS_URL = 'http://sc2casts.com'
     USERAGENT = ('Mozilla/5.0 (Windows; U; Windows NT 6.1; en-GB; rv:1.9.2.8) '
                  'Gecko/20100722 Firefox/3.6.8')
     __settings__ = xbmcaddon.Addon(id='plugin.video.sc2casts')
     __language__ = __settings__.getLocalizedString
+
+    def getCastsURL(self, path):
+        return self.SC2CASTS_URL + path
 
     def action(self, params):
         get = params.get
@@ -40,7 +43,8 @@ class SC2Casts:
     # display the root menu
     def root(self):
         self.addCategory(self.__language__(31000),
-                         'http://sc2casts.com/index.php', 'showTitles')
+                         self.getCastsURL('/index.php'),
+                         'showTitles')
         self.addCategory(self.__language__(31001), '', 'rootTop')
         self.addCategory(self.__language__(31002), '', 'rootBrowse')
         self.addCategory(self.__language__(31003), '', 'showTitlesSearch')
@@ -48,24 +52,26 @@ class SC2Casts:
     # display the top casts menu
     def rootTop(self):
         self.addCategory(self.__language__(31004),
-                         'http://sc2casts.com/top/index.php?all',
+                         self.getCastsURL('/top/index.php?all'),
                          'showTitlesTop')
         self.addCategory(self.__language__(31005),
-                         'http://sc2casts.com/top/index.php?month',
+                         self.getCastsURL('/top/index.php?month'),
                          'showTitlesTop')
         self.addCategory(self.__language__(31006),
-                         'http://sc2casts.com/top/index.php?week',
+                         self.getCastsURL('/top/index.php?week'),
                          'showTitlesTop')
         self.addCategory(self.__language__(31007),
-                         'http://sc2casts.com/top/index.php', 'showTitlesTop')
+                         self.getCastsURL('/top/index.php'),
+                         'showTitlesTop')
 
     # display the browse casts menu
     def rootBrowse(self):
         self.addCategory(self.__language__(31008),
-                         'http://sc2casts.com/browse/index.php', 'browseEvents')
+                         self.getCastsURL('/browse/index.php'),
+                         'browseEvents')
         self.addCategory(self.__language__(31009), '', 'browseMatchups')
         self.addCategory(self.__language__(31010),
-                         'http://sc2casts.com/browse/index.php',
+                         self.getCastsURL('/browse/index.php'),
                          'browseCasters')
 
     # display the browse events menu
@@ -76,22 +82,22 @@ class SC2Casts:
 
         for i in range(len(event)):
             self.addCategory(event[i][1],
-                             'http://sc2casts.com/event'+event[i][0],
+                             self.getCastsURL('/event'+event[i][0]),
                              'showTitles')
 
     # display the browse casters menu
     def browseMatchups(self):
-        self.addCategory('PvZ', 'http://sc2casts.com/matchups-PvZ',
+        self.addCategory('PvZ', self.getCastsURL('/matchups-PvZ'),
                          'showTitles')
-        self.addCategory('PvT', 'http://sc2casts.com/matchups-PvT',
+        self.addCategory('PvT', self.getCastsURL('/matchups-PvT'),
                          'showTitles')
-        self.addCategory('TvZ', 'http://sc2casts.com/matchups-TvZ',
+        self.addCategory('TvZ', self.getCastsURL('/matchups-TvZ'),
                          'showTitles')
-        self.addCategory('PvP', 'http://sc2casts.com/matchups-PvP',
+        self.addCategory('PvP', self.getCastsURL('/matchups-PvP'),
                          'showTitles')
-        self.addCategory('TvT', 'http://sc2casts.com/matchups-TvT',
+        self.addCategory('TvT', self.getCastsURL('/matchups-TvT'),
                          'showTitles')
-        self.addCategory('ZvZ', 'http://sc2casts.com/matchups-ZvZ',
+        self.addCategory('ZvZ', self.getCastsURL('/matchups-ZvZ'),
                          'showTitles')
 
     # display the browse casters menu
@@ -102,7 +108,7 @@ class SC2Casts:
 
         for i in range(len(caster)):
             self.addCategory(caster[i][1],
-                             'http://sc2casts.com/caster'+caster[i][0],
+                             self.getCastsURL('/caster'+caster[i][0]),
                              'showTitles', len(caster))
 
 
@@ -142,7 +148,7 @@ class SC2Casts:
         if get('action') == 'showTitlesSearch':
             keyboard = xbmc.Keyboard('')
             keyboard.doModal()
-            url = 'http://sc2casts.com/?q='+keyboard.getText()
+            url = self.getCastsURL('/?q='+keyboard.getText())
         link = self.getRequest(url)
 
         # Get settings
@@ -196,7 +202,7 @@ class SC2Casts:
 
     def showGames(self, params = {}):
         get = params.get
-        link = self.getRequest('http://sc2casts.com'+get('url'))
+        link = self.getRequest(self.getCastsURL(get('url')))
         matchCount = (re.compile('<div id="g(.+?)"(.+?)</div></div>')
                       .findall(link))
 
