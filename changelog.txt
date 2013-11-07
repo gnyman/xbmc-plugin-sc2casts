@@ -1,3 +1,8 @@
+v0.4.7
+----------------------
+- Fix for new 'embed' Youtube link
+- Cleaned up code (retiman)
+
 v0.4.6
 ----------------------
 - Changed backend to use the youtube plugin to work around youtube issues.
