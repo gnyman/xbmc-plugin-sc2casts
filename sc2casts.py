@@ -210,10 +210,8 @@ class SC2Casts:
 
         if len(matchCount) > 0:
             for i in range(len(matchCount)):
-                videoContent=(re.compile('<param name="movie" '
-                                         'value="%s/v/(.+?)'
-                                         '\?.+?"></param>' % self.VIDEO_URL)
-                              .findall(matchCount[i][1]))
+                videoContent=re.compile('src="https://www.youtube.com/embed'
+                                        '/(.+?)"').findall(matchCount[i][1])
                 if len(videoContent) == 0:
                     self.addVideo('Game ' + str(i + 1), 'fillUp')
                 if len(videoContent) == 1:
